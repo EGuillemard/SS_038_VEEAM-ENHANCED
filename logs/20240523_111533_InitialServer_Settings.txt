@@ -1,0 +1,47 @@
+2024-05-23T11:15:33.1136798+02:00 - START - Get Current setting on PILAP00130
+2024-05-23T11:15:33.1336850+02:00 - 1 - Remote Desktop Services (TermService) should be disabled
+2024-05-23T11:15:33.1636813+02:00 -    - Service TermService : StartType=Manual : ServiceStatus=Stopped
+2024-05-23T11:15:33.1837397+02:00 - 2 - Remote Registry service (RemoteRegistry) should be disabled
+2024-05-23T11:15:33.2237557+02:00 -    - Service RemoteRegistry : StartType=Disabled : ServiceStatus=Stopped
+2024-05-23T11:15:33.2437565+02:00 - 3 - Windows Remote Management (WinRM) service should be disabled
+2024-05-23T11:15:33.2762882+02:00 -    - Service WinRM : StartType=Automatic : ServiceStatus=Running
+2024-05-23T11:15:33.2938212+02:00 - 4 - Windows Firewall should be enabled
+2024-05-23T11:15:33.5739387+02:00 -    - Firewall : Profil=Domain : Status=True
+2024-05-23T11:15:33.5939822+02:00 -    - Firewall : Profil=Private : Status=True
+2024-05-23T11:15:33.6139827+02:00 -    - Firewall : Profil=Public : Status=True
+2024-05-23T11:15:33.6339823+02:00 - 5 - WDigest credentials caching should be disabled
+2024-05-23T11:15:33.6639847+02:00 -    -  REGEDIT : Path=HKLM:\System\CurrentControlSet\Control\SecurityProviders\WDigest exists
+2024-05-23T11:15:33.7040555+02:00 -    - REGEDIT : Name=UseLogonCredential doesn't exist
+2024-05-23T11:15:33.7240572+02:00 - 6 - Web Proxy Auto-Discovery service (WinHttpAutoProxySvc) should be disabled
+2024-05-23T11:15:33.7640536+02:00 -    - Service WinHttpAutoProxySvc : StartType=Manual : ServiceStatus=Running
+2024-05-23T11:15:33.7941176+02:00 -    -  REGEDIT : Path=HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp exists
+2024-05-23T11:15:33.8241170+02:00 -    - REGEDIT : Name=DisableWpad doesn't exist
+2024-05-23T11:15:33.8441190+02:00 - 7 - Deprecated versions of SSL and TLS should be disabled
+2024-05-23T11:15:33.9541993+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Client doesn't exist
+2024-05-23T11:15:34.0586932+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Server doesn't exist
+2024-05-23T11:15:34.1857158+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client doesn't exist
+2024-05-23T11:15:34.2767709+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server doesn't exist
+2024-05-23T11:15:34.3768429+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client doesn't exist
+2024-05-23T11:15:34.4769200+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server doesn't exist
+2024-05-23T11:15:34.5769891+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client doesn't exist
+2024-05-23T11:15:34.6760485+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server doesn't exist
+2024-05-23T11:15:34.7771437+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Client doesn't exist
+2024-05-23T11:15:34.8772087+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 2.0\Server doesn't exist
+2024-05-23T11:15:34.9862936+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Client doesn't exist
+2024-05-23T11:15:35.0773403+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\SSL 3.0\Server doesn't exist
+2024-05-23T11:15:35.1774120+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client doesn't exist
+2024-05-23T11:15:35.3065115+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server doesn't exist
+2024-05-23T11:15:35.4065949+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client doesn't exist
+2024-05-23T11:15:35.5066538+02:00 -     - REGEDIT : Path=HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server doesn't exist
+2024-05-23T11:15:35.5266516+02:00 - 8 - Windows Script Host should be disabled
+2024-05-23T11:15:35.5867544+02:00 -    -  REGEDIT : Path=HKLM:\SOFTWARE\Microsoft\Windows Script Host\Settings exists
+2024-05-23T11:15:35.6367916+02:00 -    - REGEDIT : Name=Enabled doesn't exist
+2024-05-23T11:15:35.6467790+02:00 - 9 - SMBv1 protocol should be disabled
+2024-05-23T11:15:35.8277063+02:00 -    - SMBServer : Property=EnableSMB1Protocol : Value=False
+2024-05-23T11:15:35.8878269+02:00 - 10 - Link-Local Multicast Name Resolution (LLMNR) should be disabled
+2024-05-23T11:15:35.9386100+02:00 -     - REGEDIT : Path=HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient doesn't exist
+2024-05-23T11:15:36.0381644+02:00 - 11 - SMBv3 signing and encryption should be enabled
+2024-05-23T11:15:36.1884979+02:00 -    - SMBServer : Property=RequireSecuritySignature : Value=False
+2024-05-23T11:15:36.2785164+02:00 -    - SMBServer : Property=EncryptData : Value=False
+2024-05-23T11:15:36.3785556+02:00 -    - SMBServer : Property=EnableSecuritySignature : Value=False
+2024-05-23T11:15:36.4185707+02:00 - END - Get Current setting on PILAP00130
