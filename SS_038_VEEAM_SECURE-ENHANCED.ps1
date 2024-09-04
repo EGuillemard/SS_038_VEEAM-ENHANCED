@@ -12,7 +12,7 @@
 # COMMENTS: 
 #
 #Requires -Version 3.0
-#https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
+#
 # =======================================================
 
 cd "C:\Users\ErwanGUILLEMARD\OneDrive\Personnel\Projet\Scripts\SS_038_VEEAM-ENHANCED"
