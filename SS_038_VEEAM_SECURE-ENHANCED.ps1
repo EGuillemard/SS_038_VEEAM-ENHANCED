@@ -6,9 +6,13 @@
 # KEYWORDS: VEEAM
 # 2024/04/12 - 1.0.0 : Script creation
 # 2024/05/22 - 1.0.1 : Logtrace
+# 2024/09/04 - 1.0.2 : Add new recommandations applied on 12.2.x
+#                      LSASS as a protected process
+#                      NetBIOS disabled
 # COMMENTS: 
 #
 #Requires -Version 3.0
+#https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection
 # =======================================================
 
 cd "C:\Users\ErwanGUILLEMARD\OneDrive\Personnel\Projet\Scripts\SS_038_VEEAM-ENHANCED"
@@ -130,33 +134,33 @@ function Get-EditRegistry {
     $regExist=Test-Path -Path $Path
     if($regExist){
         Write-Debug "$($Path) exists"
-        "$(Date -Format o) -    -  REGEDIT : Path=$($Path) exists" >> $_const_InventoryPath
+        "$(Date -Format o) -    - REGEDIT : Path=$($Path) exists" >> $_const_InventoryPath
         try{
             $regValue=Get-ItemPropertyValue -Path $Path -Name $Name
             $regType=$regValue.GetType() | Select Name
-            switch($regType){
+            switch($regType.Name){
                 Int32{
-                    Write-Debug "$($Type) match with REG_DWORD"
+                    Write-Debug "$($regType.Name) match with REG_DWORD"
                     "$(Date -Format o) -    - REGEDIT : Name=$($Name) : Type=REG_DWORD : Value=$($regValue)" >> $_const_InventoryPath
                 }
                 String{
-                    Write-Debug "$($Type) match with REG_SZ or REG_EXPAND_SZ"
+                    Write-Debug "$($regType.Name) match with REG_SZ or REG_EXPAND_SZ"
                     "$(Date -Format o) -    - REGEDIT : Name=$($Name) : Type=REG_SZ or REG_EXPAND_SZ : Value=$($regValue)" >> $_const_InventoryPath
                 }
                 Int64{
-                    Write-Debug "$($Type) match with QWORD"
+                    Write-Debug "$($regType.Name) match with QWORD"
                     "$(Date -Format o) -    - REGEDIT : Name=$($Name) : Type=REG_QWORD : Value=$($regValue)" >> $_const_InventoryPath
                 }
                 Byte[]{
-                    Write-Debug "$($Type) match with REG_BINARY"
+                    Write-Debug "$($regType.Name) match with REG_BINARY"
                     "$(Date -Format o) -    - REGEDIT : Name=$($Name) : Type=REG_BINARY : Value=$($regValue)" >> $_const_InventoryPath
                 }
                 String[]{
-                    Write-Debug "$($Type) match with MultiString (REG_MUTLI_SZ)"
+                    Write-Debug "$($regType.Name) match with MultiString (REG_MUTLI_SZ)"
                     "$(Date -Format o) -    - REGEDIT : Name=$($Name) : Type=REG_MUTLI_SZ : Value=$($regValue)" >> $_const_InventoryPath
                 }
                 Default{
-                  Write-Host "$($Type) not correct, Type must be REG_SZ, REG_BINARY, DWORD, QWORD, REG_MULTI_SZ, REG_EXPAND_SZ"
+                  Write-Host "$($regType.Name) not correct, Type must be REG_SZ, REG_BINARY, DWORD, QWORD, REG_MULTI_SZ, REG_EXPAND_SZ"
                   "$(Date -Format o) -     - REGEDIT : Name=$($Name) : Type=UNKNOW : Value=$($regValue)" >> $_const_InventoryPath  
                 }    
             }    
@@ -430,6 +434,17 @@ function Get-VEEAMSecurityComplianceRecommandation {
     Get-ManageSMBServer -Property RequireSecuritySignature
     Get-ManageSMBServer -Property EncryptData
     Get-ManageSMBServer -Property EnableSecuritySignature
+    # 12 - Local Security Authority Server Service (LSASS) should be set to run as a protected process
+    "$(Date -Format o) - 12 - Local Security Authority Server Service (LSASS) should be set to run as a protected process" >> $_const_InventoryPath
+    Get-EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" `
+                     -Name "RunAsPPL"
+    # 13 - NetBIOS protocol should be disabled on all network interface
+    "$(Date -Format o) - 13 - NetBIOS protocol should be disabled on all network interface" >> $_const_InventoryPath
+    $regNetBiosItems=Get-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters\Interfaces\*" | Select PSChildName
+    foreach ($NetBiosItem in $regNetBiosItems){
+        Get-EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters\Interfaces\$($NetBiosItem.PSChildName)" `
+                         -Name "NetbiosOptions"
+    }
     "$(Date -Format o) - END - Get Current setting on $($env:COMPUTERNAME)" >> $_const_InventoryPath
 }
 
@@ -557,6 +572,21 @@ function Set-VEEAMSecurityComplianceRecommandation {
                     -Status $true
     ManageSMBServer -Property EnableSecuritySignature `
                     -Status $true
+    # 12 - Local Security Authority Server Service (LSASS) should be set to run as a protected process
+    "$(Date -Format o) - 12 - Local Security Authority Server Service (LSASS) should be set to run as a protected process" >> $_const_RecommandationsPath
+    EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" `
+                 -Name "RunAsPPL" `
+                 -Type "DWORD" `
+                 -Value "2"
+    # 13 - NetBIOS protocol should be disabled on all network interface
+    "$(Date -Format o) - 13 - NetBIOS protocol should be disabled on all network interface" >> $_const_RecommandationsPath
+    $regNetBiosItems=Get-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters\Interfaces\*" | Select PSChildName
+    foreach ($NetBiosItem in $regNetBiosItems){
+        EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters\Interfaces\$($NetBiosItem.PSChildName)" `
+                     -Name "NetbiosOptions" `
+                     -Type "DWORD" `
+                     -Value "2"
+    }
     "$(Date -Format o) - END - Set Veeam Compliance Recommandations on $($env:COMPUTERNAME)" >> $_const_RecommandationsPath
 }
 
