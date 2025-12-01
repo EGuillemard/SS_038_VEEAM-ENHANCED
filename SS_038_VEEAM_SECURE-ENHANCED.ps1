@@ -9,6 +9,8 @@
 # 2024/09/04 - 1.0.2 : Add new recommandations applied on 12.2.x
 #                      LSASS as a protected process
 #                      NetBIOS disabled
+# 2025/12/01 - 1.0.3 : Add new recommandation applied on 13.0.1
+#					   Credentials Manager (EnableVirtualizationBasedSecurity, RequirePlatformSecurityFeatures, LsaCfgFlags)
 # COMMENTS: 
 #
 #Requires -Version 3.0
@@ -445,6 +447,15 @@ function Get-VEEAMSecurityComplianceRecommandation {
         Get-EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Services\NetBT\Parameters\Interfaces\$($NetBiosItem.PSChildName)" `
                          -Name "NetbiosOptions"
     }
+    # 14 - Credentials Guard  should be configured properly to prevent credential theft attacks.
+    #https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/
+    "$(Date -Format o) - 14 - Credentials Guard  should be configured properly to prevent credential theft attacks" >> $_const_InventoryPath
+    $regCredentialsItems_EnabledVirtualizationBaseSecurity=Get-EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" `
+                                                                            -Name "EnableVirtualizationBasedSecurity"
+    $regCredentialsItems_RequirePlatformSecurityFeatures=Get-EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" `
+                                                                          -Name "RequirePlatformSecurityFeatures"
+    $regCredentialsItems_LsaCfgFlags =Get-EditRegistry -Path "HKLM:\SYSTEMCurrentControlSet\Control\Lsa" `
+                                                       -Name "LsaCfgFlags "
     "$(Date -Format o) - END - Get Current setting on $($env:COMPUTERNAME)" >> $_const_InventoryPath
 }
 
@@ -587,6 +598,22 @@ function Set-VEEAMSecurityComplianceRecommandation {
                      -Type "DWORD" `
                      -Value "2"
     }
+	# 14 - Credentials Guard  should be configured properly to prevent credential theft attacks.
+    #https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/
+    #https://learn.microsoft.com/en-us/windows/security/identity-protection/credential-guard/configure?tabs=reg
+    "$(Date -Format o) - 14 - Credentials Guard  should be configured properly to prevent credential theft attacks" >> $_const_InventoryPath
+    EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" `
+                 -Name "EnableVirtualizationBasedSecurity" `
+                 -Type "DWORD" `
+                 -Value "1"
+    EditRegistry -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" `
+                 -Name "RequirePlatformSecurityFeatures" `
+                 -Type "DWORD" `
+                 -Value "1"
+    EditRegistry -Path "HKLM:\SYSTEMCurrentControlSet\Control\Lsa" `
+                 -Name "LsaCfgFlags" `
+                 -Type "DWORD" `
+                 -Value "2"
     "$(Date -Format o) - END - Set Veeam Compliance Recommandations on $($env:COMPUTERNAME)" >> $_const_RecommandationsPath
 }
 
